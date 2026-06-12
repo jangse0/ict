@@ -91,9 +91,6 @@ def _track_seq(seq: Optional[int], received: set, stats: dict,
                fill_gap: Callable) -> bool:
     if seq is None:
         return False
-    if seq in received:
-        stats["duplicate_seq"] += 1
-        return False
     last = stats["last_seq_num"]
     is_late = False
     if last is not None and seq > last + 1:
@@ -284,6 +281,10 @@ def _process(data: SensorData) -> dict:
     stats = entrance_stats[eid]
     stats["total_received"] += 1
     seq = data.seq_num
+
+    if seq is not None and seq in entrance_received_seqs[eid]:
+        stats["duplicate_seq"] += 1
+        return {"message": "Duplicate seq ignored", "ack_num": seq, "server_acc": acc_received[eid]}
 
     is_late = _track_seq(
         seq, entrance_received_seqs[eid], stats,

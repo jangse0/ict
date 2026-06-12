@@ -98,8 +98,14 @@ FastAPI 서버가 완전히 기동되기 전에 센서 스레드가 첫 요청�
 
 **원인 분석**
 
-TCP 재전송 시뮬레이션에서 원본 패킷이 네트워크 레이어에서 지연된 상태로 살아있고, 재전송 패킷이 먼저 도착해 성공하더라도 지연된 원본이 나중에 도착.
+TCP 재전송 시뮬레이션에서 원본 패킷이 네트워크 레이어에서 지연된 상태로 살아있고, 재전송 패킷이 먼저 도착해 성공하더라도 지연된 원본이 나중에 도착. 초기 구현에서는 `_track_seq()` 내부에서 중복을 감지해 카운터만 올렸으나, 호출부인 `_process()`가 반환값을 이용해 처리를 중단하지 않아 delta가 그대로 누적되는 버그가 있었음.
 
 **해결**
 
-서버의 `_track_seq()`에서 입구별로 `received_seqs` 집합을 유지하고, 이미 처리한 seq가 수신되면 즉시 중복으로 판정해 `entrance_stats["duplicate_seq"]`만 증가시키고 delta 누적은 건너뜀.
+`_process()` 진입 직후 `entrance_received_seqs[eid]` 집합으로 중복 seq를 선제 확인하고, 중복이면 즉시 early return해 이후의 Z-score 탐지·delta 누적·로그 기록 단계를 모두 건너뜀.
+
+```python
+if seq is not None and seq in entrance_received_seqs[eid]:
+    stats["duplicate_seq"] += 1
+    return {"message": "Duplicate seq ignored", "ack_num": seq, "server_acc": acc_received[eid]}
+```
