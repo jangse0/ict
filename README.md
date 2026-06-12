@@ -1,8 +1,7 @@
 # Smart Parking Monitoring System
 
-## YouTube Link
 
-> **[시연 영상 링크를 여기에 삽입하세요]**
+> (https://drive.google.com/file/d/1Oao2sv0wHTgZ4UzQvaXr7ddewiapWVQU/view?usp=sharing)
 
 ---
 
