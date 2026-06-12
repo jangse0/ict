@@ -85,15 +85,13 @@
 ## How to Run
 
 ```bash
-# 1. 의존성 설치
-pip install -r requirements.txt
 
-# 2. FastAPI 서버 실행 (터미널 1)
+# 1. FastAPI 서버 실행 (터미널 1)
 uvicorn src.main:app --reload
 
-# 3. Streamlit 대시보드 실행 (터미널 2)
+# 2. Streamlit 대시보드 실행 (터미널 2)
 streamlit run dashboard/app.py
 
-# 4. 센서 시뮬레이션 시작 (터미널 3)
+# 3. 센서 시뮬레이션 시작 (터미널 3)
 python data/sensor_simulation.py
 ```
