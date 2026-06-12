@@ -78,7 +78,8 @@
 │   └── app.py                # Streamlit 실시간 대시보드
 ├── data/
 │   ├── sensor_simulation.py  # 입구 A·B 센서 시뮬레이터 (멀티스레드)
-│   └── sample_readings.json  # 테스트용 샘플 패킷 데이터
+│
+데이터
 ├── requirements.txt
 └── README.md
 ```
